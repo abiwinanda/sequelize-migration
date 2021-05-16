@@ -148,3 +148,38 @@ Once the migration files has been created, run the following command to create t
 ```sh
 npx sequelize-cli db:migrate
 ```
+
+## How Sequelize Track Migration
+
+Sequelize track migrations (understand which migrations has been run and which has not) by using `SequelizeMeta` table. This table is created by sequelize and it is used to store the records of migrations that has been executed.
+
+Consider the following example, let say you have these migrations:
+  * `20210516102700-create_table_one.js`
+  * `20210516103026-create_table_two.js`
+  * `20210516103800-create_table_three.js`
+
+When you run `npx sequelize-cli db:migrate` it will migrate all the migration files and store each migration file name in `SequelizeMeta` as follows
+
+```sh
+---------------------------------------------------
+|                       name                      |
+---------------------------------------------------
+|       20210516102700-create_table_one.js        |
+---------------------------------------------------
+|       20210516102700-create_table_two.js        |
+---------------------------------------------------
+|       20210516102700-create_table_three.js      |
+---------------------------------------------------
+```
+
+These records influence sequelize such that the next time `npx sequelize-cli db:migrate` is being run, these three migrations would not be run
+
+If you create a new migration called `20210516103948-create_table_four.js` then running the migration command will implement the changes in the `20210516103948-create_table_four.js` migration file since it has not been exists in the `SequelizeMeta` table.
+
+## Migrating to Sequelize Migration
+
+If your team used to execute raw sql query in the DB directly to make DB changes and decided to start using sequelize migration to perform changes you could follow the following procedures:
+  1. First, create a new migration file. E.g `npx sequelize-cli migration:generate --name init_tables`
+  2. You need to replicate all existing tables in your DB in the migration file. You could use multiple migration files or just a single file. It is recommended to just use a single file.
+  3. Finally once you have replicate all existing tables in the migration file(s) you need to register this migration file to `SequelizeMeta` table so that your database understands at which state does your migration currently at. To do this simply add the migration file name as a record in the `SequelizeMeta` table. E.g if your migration file name is `20210516102910-.init_tables.js`, simply add the file name to the `SequelizeMeta` table.
+  4. After step 3, you could start making new tables or altering existing tables using sequelize migration :D
