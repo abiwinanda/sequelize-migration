@@ -149,7 +149,7 @@ Once the migration files has been created, run the following command to create t
 npx sequelize-cli db:migrate
 ```
 
-## How Sequelize Track Migration
+## How Sequelize Track Migrations
 
 Sequelize track migrations (understand which migrations has been run and which has not) by using `SequelizeMeta` table. This table is created by sequelize and it is used to store the records of migrations that has been executed.
 
