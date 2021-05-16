@@ -11,9 +11,10 @@ npx sequelize-cli init
 ```
 
 This will create the following files:
-  * config/config.json
-  * migrations
-  * models/index.js
+  * `config/config.json`
+  * `migrations`
+  * `models/index.js`
+  * `seeders`
 
 First of all we won't be using anything in the models directory hence feel free to delete this. All created migration will be stored under `migrations` folder and the database config is located under the `config` folder. We will be using `.js` file to read the database config instead of `config.json` file so that we could store the DB config inside environment variables.
 
